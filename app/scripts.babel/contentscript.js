@@ -1,17 +1,21 @@
 'use strict';
 
 // ---- jquery util
-let isCreatePage = () => location.hash === '#eventpage_6';
+let isCreatePage = () => location.hash.match(/^#eventpage_6/);
 let createButton = () => $('#maincell .action-btn-wrapper div[role="button"]');
 let body = () => $('body');
-let shareModal = () => $('#socialcalendarextension-share-modal');
+let shareModal = (query) => $('#socialcalendarextension-share-modal' + (query ? `-${query}` : ''));
 
 // used as `let event = Event(); let title = event.title.value;`
 let Event = () => ({
-  title: $('#maincell input[type="text"]')[0],
-  location: $('#maincell input[type="text"]')[1]
+  $title: $('#maincell input[type="text"]')[0],
+  $location: $('#maincell input[type="text"]')[1]
 });
-Event.toString = (event) => encodeURIComponent(`Event ${event.title.value} at ${event.location.value}`);
+Event.toString = (event) => encodeURIComponent(`Event ${event.title} at ${event.location}`);
+Event.setValues = (event) => {
+  event.title = event.$title.value;
+  event.location = event.$location.value;
+};
 
 // ---- sharee options
 let twitterUrl = 'https://twitter.com/intent/tweet?text=';
@@ -44,13 +48,16 @@ function shareThisEvent(event) {
     padding: 20
   });
 
+  Event.setValues(event);
   modal.data('event', event);
+
+  // shareModal('text').text(Event.toString(event));
 
   modal.iziModal('open');
 }
 
 $(document).on('opened', shareModal().attr('id'), function (e) {
-    shareModal().find('#socialcalendarextension-share-modal-twitter').on('click', () => {
+    shareModal('twitter').on('click', () => {
       window.open(twitterUrl + Event.toString(shareModal().data('event')), '', windowOptions);
     });
 });
