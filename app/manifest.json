@@ -26,8 +26,12 @@
         "*://calendar.google.com/*"
       ],
       "js": [
-        "bower_components/jquery/dist/jquery.min.js",
+        "bower_components/jquery/dist/jquery.js",
+        "bower_components/izimodal/js/iziModal.js",
         "scripts/contentscript.js"
+      ],
+      "css": [
+        "bower_components/izimodal/css/iziModal.min.css"
       ],
       "run_at": "document_end",
       "all_frames": false
@@ -43,5 +47,8 @@
     },
     "default_title": "Social Calendar",
     "default_popup": "popup.html"
-  }
+  },
+  "web_accessible_resources": [
+    "share-popup.html"
+  ]
 }
