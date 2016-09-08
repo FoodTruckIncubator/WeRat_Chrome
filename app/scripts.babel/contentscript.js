@@ -11,7 +11,8 @@ let Event = () => ({
   $title: $('#maincell input[type="text"]')[0],
   $location: $('#maincell input[type="text"]')[1]
 });
-Event.toString = (event) => encodeURIComponent(`Event ${event.title} at ${event.location}`);
+Event.toText = (event) => `Event ${event.title} at ${event.location}`;
+Event.toLink = (event) => encodeURIComponent(Event.toText(event));
 Event.setValues = (event) => {
   event.title = event.$title.value;
   event.location = event.$location.value;
@@ -19,6 +20,8 @@ Event.setValues = (event) => {
 
 // ---- sharee options
 let twitterUrl = 'https://twitter.com/intent/tweet?text=';
+let facebookUrl = 'https://www.facebook.com/sharer/sharer.php?u=https://calendar.google.com';
+let gplusUrl = 'https://plus.google.com/share?url=https://calendar.google.com';
 let windowOptions = `width=500, height=500,left=${(window.outerWidth - 500)/2}, top=${(window.outerHeight - 500)/ 2.5}`;
 
 // ---- setup
@@ -38,11 +41,11 @@ function onHashChange() {
 
   let event = Event();
 
-  createButton().on('click', setTimeout.bind(this, shareThisEvent.bind(this, event), 2000));
+  createButton().on('click', setTimeout.bind(this, shareThisEvent.bind(this, event), 800));
 }
 
 function shareThisEvent(event) {
-  // window.open(twitterUrl + Event.toString(event), '', windowOptions);
+  // window.open(twitterUrl + Event.toLink(event), '', windowOptions);
 
   var modal = shareModal().iziModal({
     padding: 20
@@ -51,14 +54,20 @@ function shareThisEvent(event) {
   Event.setValues(event);
   modal.data('event', event);
 
-  // shareModal('text').text(Event.toString(event));
+  shareModal('text').text(Event.toText(event));
 
   modal.iziModal('open');
 }
 
 $(document).on('opened', shareModal().attr('id'), function (e) {
     shareModal('twitter').on('click', () => {
-      window.open(twitterUrl + Event.toString(shareModal().data('event')), '', windowOptions);
+      window.open(twitterUrl + Event.toLink(shareModal().data('event')), '', windowOptions);
+    });
+    shareModal('facebook').on('click', () => {
+      window.open(facebookUrl, '', windowOptions);
+    });
+    shareModal('gplus').on('click', () => {
+      window.open(gplusUrl, '', windowOptions);
     });
 });
 
