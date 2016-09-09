@@ -46,11 +46,11 @@
       "19": "images/icon-19.png",
       "38": "images/icon-38.png"
     },
-    "default_title": "Social Calendar",
-    "default_popup": "popup.html"
+    "default_title": "Social Calendar"
   },
+  "options_page": "views/options.html",
   "web_accessible_resources": [
-    "share-popup.html",
+    "views/share-popup.html",
     "facebook-script.js",
     "facebook-sdk.js"
   ]
