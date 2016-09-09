@@ -23,7 +23,6 @@
     transition: 0.1s linear all;
   }
 </style>
-
 <div
   id="socialcalendarextension-share-modal"
   class="iziModal"
@@ -39,4 +38,16 @@
   <button class="socialcalendarextension-btn" id="socialcalendarextension-share-modal-twitter">Twitter</button>
   <button class="socialcalendarextension-btn" id="socialcalendarextension-share-modal-facebook">Facebook</button>
   <button class="socialcalendarextension-btn" id="socialcalendarextension-share-modal-gplus">Google Plus</button>
+
+  <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+  </fb:login-button>
+
+  <div id="status">
+  </div>
 </div>
+
+<!--
+  Below we include the Login Button social plugin. This button uses
+  the JavaScript SDK to present a graphical Login button that triggers
+  the FB.login() function when clicked.
+-->

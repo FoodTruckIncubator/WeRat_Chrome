@@ -28,6 +28,7 @@
       "js": [
         "bower_components/jquery/dist/jquery.js",
         "bower_components/izimodal/js/iziModal.js",
+        "scripts/inject-facebook.js",
         "scripts/contentscript.js"
       ],
       "css": [
@@ -49,6 +50,8 @@
     "default_popup": "popup.html"
   },
   "web_accessible_resources": [
-    "share-popup.html"
+    "share-popup.html",
+    "facebook-script.js",
+    "facebook-sdk.js"
   ]
 }
