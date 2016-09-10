@@ -17,7 +17,7 @@ Event.toText = (event) => {
   let datetime = event.datetime[0].value;
   if(!event.isAllDay()) datetime += ' ' + event.datetime[1].value;
 
-  return `Event ${datetime} - ${event.title} at ${event.location}`;
+  return `In ${datetime}, ${event.title} at ${event.location}`;
 }
 Event.toLink = (event) => encodeURIComponent(Event.toText(event));
 Event.setValues = (event) => {
