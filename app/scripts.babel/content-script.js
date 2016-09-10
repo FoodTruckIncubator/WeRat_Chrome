@@ -13,13 +13,21 @@ let Event = () => ({
   datetime: $('#maincell .ep-edr-first-line input'),
   isAllDay: () => $('#maincell input[type="checkbox"]:first').is(':checked')
 });
+
+Event.imageUrl = (event) => {
+  return 'https://placeholdit.imgix.net/~text?txtsize=33&bg=bbbbbb&txtclr=666666&w=400&h=300&txttrack=0&txt='
+    + Event.toLink(event);
+}
+
 Event.toText = (event) => {
   let datetime = event.datetime[0].value;
   if(!event.isAllDay()) datetime += ' ' + event.datetime[1].value;
 
   return `In ${datetime}, ${event.title} at ${event.location}`;
 }
+
 Event.toLink = (event) => encodeURIComponent(Event.toText(event));
+
 Event.setValues = (event) => {
   event.title = event.$title.value;
   event.location = event.$location.value;
@@ -28,7 +36,7 @@ Event.setValues = (event) => {
 // ---- sharee options
 let twitterUrl = 'https://twitter.com/intent/tweet?text=';
 let facebookUrl = 'https://www.facebook.com/sharer/sharer.php?u=https://calendar.google.com';
-let gplusUrl = 'https://plus.google.com/share?url=https://calendar.google.com';
+let gplusUrl = (url) => 'https://plus.google.com/share?url=' + encodeURIComponent(url);
 let windowOptions = `width=500, height=500,left=${(window.outerWidth - 500)/2}, top=${(window.outerHeight - 500)/ 2.5}`;
 
 // ---- setup
@@ -84,7 +92,7 @@ function handleModalButtons() {
     confirmPostToFacebook(Event, event);
   });
   shareModal('-gplus').off('click').on('click', () => {
-    window.open(gplusUrl, '', windowOptions);
+    window.open(gplusUrl(Event.imageUrl(event)), '', windowOptions);
   });
 }
 
