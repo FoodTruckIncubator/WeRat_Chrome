@@ -6,9 +6,9 @@ body {
 .socialcalendarextension-btn {
   cursor: pointer;
   display: inline-block;
-  background-color: #9eb3c8;
-  border-color: #889cb0;
-  color: #fff;
+  background-color: #9EB3C8;
+  border-color: #889CB0;
+  color: #FFF;
   text-shadow: rgb(93, 108, 126) 0px 1px 1px;
   padding: 6px 15px;
   -webkit-box-shadow: 0 1px 2px rgb(196, 210, 223);
@@ -16,8 +16,8 @@ body {
   box-shadow: 0 1px 2px rgb(196, 210, 223);
   font-size: 13px;
   line-height: normal;
-  border: 1px solid #ccc;
-  border-bottom-color: #bbb;
+  border: 1px solid #CCC;
+  border-bottom-color: #BBB;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
@@ -29,15 +29,16 @@ body {
 }
 
 .socialcalendarextension-btn:hover {
-  border-color: #ACACAC;
-  background-color: #BDBABD;
+  border-color: #BEBEBE;
+  background-color: #C2C6CA;
   text-shadow: rgb(145, 151, 157) 0px 1px 1px;
   text-decoration: none;
 }
 
 .socialcalendarextension-btn.sce-disabled {
-  background-color: rgb(189, 186, 189) !important;
-  color: rgb(238, 238, 238) !important;
+  background-color: rgb(219, 219, 219) !important;
+  color: #959595 !important;
+  pointer-events: none;
   text-shadow: none !important;
   border: none !important;
   box-shadow: none !important;

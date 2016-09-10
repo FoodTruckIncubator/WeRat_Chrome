@@ -9,9 +9,16 @@ let shareModal = (query) => $('#socialcalendarextension-share-modal' + (query ||
 // used as `let event = Event(); let title = event.title.value;`
 let Event = () => ({
   $title: $('#maincell input[type="text"]')[0],
-  $location: $('#maincell input[type="text"]')[1]
+  $location: $('#maincell input[type="text"]')[1],
+  datetime: $('#maincell .ep-edr-first-line input'),
+  isAllDay: () => $('#maincell input[type="checkbox"]:first').is(':checked')
 });
-Event.toText = (event) => `Event ${event.title} at ${event.location}`;
+Event.toText = (event) => {
+  let datetime = event.datetime[0].value;
+  if(!event.isAllDay()) datetime += ' ' + event.datetime[1].value;
+
+  return `Event ${datetime} - ${event.title} at ${event.location}`;
+}
 Event.toLink = (event) => encodeURIComponent(Event.toText(event));
 Event.setValues = (event) => {
   event.title = event.$title.value;
@@ -61,24 +68,24 @@ function shareThisEvent(event) {
 function loadModal() {
   $.get(chrome.extension.getURL('/views/share-popup.html'), (popup) => {
     body().append(popup);
-    handleModalButtons();
+    checkFacebookLoginState();
   });
 }
 
 function handleModalButtons() {
-  // shareModal(' button').forEach(function(button) {
-  //   sharePost()
-  // });
+  let event = shareModal().data('event');
 
-  checkFacebookLoginState();
+  shareModal('-text').text(`"${Event.toText(event)}"`);
 
-  shareModal('-twitter').on('click', () => {
-    window.open(twitterUrl + Event.toLink(shareModal().data('event')), '', windowOptions);
+  shareModal('-twitter').off('click').on('click', () => {
+    window.open(twitterUrl + Event.toLink(event), '', windowOptions);
   });
-  shareModal('-facebook').on('click', () => {
-    window.open(facebookUrl, '', windowOptions);
+  shareModal('-facebook').off('click').on('click', () => {
+    confirmPostToFacebook(Event, event);
   });
-  shareModal('-gplus').on('click', () => {
+  shareModal('-gplus').off('click').on('click', () => {
     window.open(gplusUrl, '', windowOptions);
   });
 }
+
+$(document).on('opened', shareModal().attr('id'), handleModalButtons);

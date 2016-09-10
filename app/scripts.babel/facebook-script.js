@@ -30,15 +30,14 @@
     }
   }
 
-  let postButton = () => $('#socialcalendarextension-facebook');
+  let postButton = () => $('#socialcalendarextension-share-modal-facebook');
   let connectButton = () => $('#socialcalendarextension-connect-facebook');
 
   function statusChangeCallback(response) {
     console.log(response);
-    if (response.status === 'connected') {
-      // Logged into your app and Facebook.
+    if(response.status === 'connected') {
       postButton().removeClass('sce-disabled');
-      testAPI();
+      connectButton().hide();
     } else {
       connectButton().show();
     }
@@ -48,17 +47,51 @@
     FB('getLoginStatus', null, statusChangeCallback);
   }
 
-  // Here we run a very simple test of the Graph API after login is
-  // successful.  See statusChangeCallback() for when this call is made.
-  function testAPI() {
-    console.log('Welcome!  Fetching your information.... ');
-    FB('api', ['/me'], function(response) {
-      console.log('Successful login for: ' + response.name);
-      document.getElementById('status').innerHTML =
-        'Thanks for logging in, ' + response.name + '!';
+  function confirmPostToFacebook(Event, event) {
+    swal({
+      title: 'Post in Facebook',
+      text: 'Write what you want to share:',
+      type: 'input',
+      showCancelButton: true,
+      closeOnConfirm: false,
+      inputValue: Event.toText(event)
+    }, function(inputValue) {
+      if(inputValue === false) return false;
+
+      if(inputValue === '') {
+        swal.showInputError('You need to write something!');
+        return false;
+      }
+      postToFacebook(inputValue);
+    });
+  }
+  function postToFacebook(text) {
+    FB('api', [
+      '/me/feed',
+      'POST',
+      {
+        message: text,
+        privacy: { value: 'SELF' }
+      }
+    ], function (response) {
+      if (response && !response.error) {
+        swal({
+          title: 'Nice!',
+          text: `You can check your post <a href="https://www.facebook.com/${response.id}" target="_blank">clicking here</a>!`,
+          type: 'success',
+          html: true
+        });
+      } else {
+        console.error('error on posting', response);
+        swal({
+          title: 'Something went wrong!',
+          type: 'error'
+        });
+      }
     });
   }
 
   window.checkFacebookLoginState = checkFacebookLoginState;
+  window.confirmPostToFacebook = confirmPostToFacebook;
   window.FB = FB;
 })();

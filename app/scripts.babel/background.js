@@ -13,3 +13,5 @@ function openOptions() {
     window.open(chrome.runtime.getURL('views/options.html'));
   }
 }
+
+chrome.browserAction.setBadge({ text: 'loading' });
