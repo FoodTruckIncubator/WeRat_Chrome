@@ -1,0 +1,59 @@
+{
+	"name": "__MSG_appName__",
+	"version": "0.0.2",
+	"manifest_version": 2,
+	"description": "__MSG_appDescription__",
+	"icons": {
+		"16": "images/icon-16.png",
+		"128": "images/icon-128.png"
+	},
+	"default_locale": "en",
+	"background": {
+		"scripts": [
+			"scripts/background.js"
+		]
+	},
+	"permissions": [
+		"tabs",
+		"http://*/*",
+		"https://*/*",
+		"background"
+	],
+	"content_scripts": [
+		{
+			"matches": [
+				"*://calendar.google.com/*"
+			],
+			"js": [
+				"bower_components/jquery/dist/jquery.js",
+				"bower_components/izimodal/js/iziModal.js",
+				"bower_components/sweetalert/dist/sweetalert.min.js",
+				"scripts/inject-scripts.js",
+				"scripts/facebook-script.js",
+				"scripts/content-script.js"
+			],
+			"css": [
+				"bower_components/izimodal/css/iziModal.min.css",
+				"bower_components/sweetalert/dist/sweetalert.css",
+				"styles/main.css"
+			],
+			"run_at": "document_end",
+			"all_frames": false
+		}
+	],
+	"omnibox": {
+		"keyword": "OMNIBOX-KEYWORD"
+	},
+	"browser_action": {
+		"default_icon": {
+			"19": "images/icon-19.png",
+			"38": "images/icon-38.png"
+		},
+		"default_title": "Social Calendar"
+	},
+	"web_accessible_resources": [
+		"views/share-popup.html",
+		"facebook-interface.js",
+		"facebook-sdk.js"
+	]
+}
