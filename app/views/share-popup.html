@@ -1,28 +1,3 @@
-<style type="text/css">
-  .socialcalendarextension-btn {
-    cursor: pointer;
-    display: inline-block;
-    background-color: #e6e6e6;
-    padding: 5px 14px 6px;
-    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
-    color: #333;
-    font-size: 13px;
-    line-height: normal;
-    border: 1px solid #ccc;
-    border-bottom-color: #bbb;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0, 0, 0, 0.05);
-    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0, 0, 0, 0.05);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0, 0, 0, 0.05);
-    -webkit-transition: 0.1s linear all;
-    -moz-transition: 0.1s linear all;
-    -ms-transition: 0.1s linear all;
-    -o-transition: 0.1s linear all;
-    transition: 0.1s linear all;
-  }
-</style>
 <div
   id="socialcalendarextension-share-modal"
   class="iziModal"
@@ -35,21 +10,24 @@
   <h3 id="socialcalendarextension-share-modal-text"></h3>
   <br>
 
-  <button class="socialcalendarextension-btn" id="socialcalendarextension-share-modal-facebook">Facebook</button>
-  <button class="socialcalendarextension-btn" id="socialcalendarextension-share-modal-twitter">Twitter</button>
-  <button class="socialcalendarextension-btn" id="socialcalendarextension-share-modal-foursquare">Foursquare</button>
-  <button class="socialcalendarextension-btn" id="socialcalendarextension-share-modal-instagram">Instagram</button>
-  <button class="socialcalendarextension-btn" id="socialcalendarextension-share-modal-gplus">Google Plus</button>
+  <button class="socialcalendarextension-btn sce-disabled" data-social="twitter" id="socialcalendarextension-share-modal-twitter">
+    Twitter
+  </button>
+  <button class="socialcalendarextension-btn sce-disabled" data-social="facebook" id="socialcalendarextension-share-modal-facebook">
+    Facebook
+  </button>
+  <button class="socialcalendarextension-btn sce-disabled" data-social="foursquare" id="socialcalendarextension-share-modal-foursquare">
+    Foursquare
+  </button>
+  <button class="socialcalendarextension-btn sce-disabled" data-social="instagram" id="socialcalendarextension-share-modal-instagram">
+    Instagram
+  </button>
+  <button class="socialcalendarextension-btn sce-disabled" data-social="gplus" id="socialcalendarextension-share-modal-gplus">
+    Google Plus
+  </button>
 
-  <fb:login-button scope="public_profile,email,user_posts" onlogin="checkLoginState();">
-  </fb:login-button>
-
-  <div id="status">
+  <div class="socialcalendarextension-connect">
+    <fb:login-button id="socialcalendarextension-connect-facebook" style="display: none;" scope="public_profile,email,user_posts" onlogin="checkFacebookLoginState()">
+    </fb:login-button>
   </div>
 </div>
-
-<!--
-  Below we include the Login Button social plugin. This button uses
-  the JavaScript SDK to present a graphical Login button that triggers
-  the FB.login() function when clicked.
--->

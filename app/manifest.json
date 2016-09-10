@@ -28,11 +28,13 @@
       "js": [
         "bower_components/jquery/dist/jquery.js",
         "bower_components/izimodal/js/iziModal.js",
-        "scripts/inject-facebook.js",
-        "scripts/contentscript.js"
+        "scripts/inject-scripts.js",
+        "scripts/facebook-script.js",
+        "scripts/content-script.js"
       ],
       "css": [
-        "bower_components/izimodal/css/iziModal.min.css"
+        "bower_components/izimodal/css/iziModal.min.css",
+        "styles/main.css"
       ],
       "run_at": "document_end",
       "all_frames": false
@@ -48,10 +50,9 @@
     },
     "default_title": "Social Calendar"
   },
-  "options_page": "views/options.html",
   "web_accessible_resources": [
     "views/share-popup.html",
-    "facebook-script.js",
+    "facebook-interface.js",
     "facebook-sdk.js"
   ]
 }

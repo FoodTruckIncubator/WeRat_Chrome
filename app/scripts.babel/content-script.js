@@ -4,7 +4,7 @@
 let isCreatePage = () => location.hash.match(/^#eventpage_6/);
 let createButton = () => $('#maincell .action-btn-wrapper div[role="button"]');
 let body = () => $('body');
-let shareModal = (query) => $('#socialcalendarextension-share-modal' + (query ? `-${query}` : ''));
+let shareModal = (query) => $('#socialcalendarextension-share-modal' + (query || ''));
 
 // used as `let event = Event(); let title = event.title.value;`
 let Event = () => ({
@@ -29,7 +29,6 @@ window.addEventListener('hashchange', onHashChange, false);
 
 onHashChange();
 loadModal();
-
 
 // ---- logic
 function onHashChange() {
@@ -59,18 +58,27 @@ function shareThisEvent(event) {
   modal.iziModal('open');
 }
 
-$(document).on('opened', shareModal().attr('id'), function (e) {
-    shareModal('twitter').on('click', () => {
-      window.open(twitterUrl + Event.toLink(shareModal().data('event')), '', windowOptions);
-    });
-    shareModal('facebook').on('click', () => {
-      window.open(facebookUrl, '', windowOptions);
-    });
-    shareModal('gplus').on('click', () => {
-      window.open(gplusUrl, '', windowOptions);
-    });
-});
-
 function loadModal() {
-  $.get(chrome.extension.getURL('share-popup.html'), (popup) => body().append(popup));
+  $.get(chrome.extension.getURL('/views/share-popup.html'), (popup) => {
+    body().append(popup);
+    handleModalButtons();
+  });
+}
+
+function handleModalButtons() {
+  // shareModal(' button').forEach(function(button) {
+  //   sharePost()
+  // });
+
+  checkFacebookLoginState();
+
+  shareModal('-twitter').on('click', () => {
+    window.open(twitterUrl + Event.toLink(shareModal().data('event')), '', windowOptions);
+  });
+  shareModal('-facebook').on('click', () => {
+    window.open(facebookUrl, '', windowOptions);
+  });
+  shareModal('-gplus').on('click', () => {
+    window.open(gplusUrl, '', windowOptions);
+  });
 }
