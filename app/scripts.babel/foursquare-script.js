@@ -19,7 +19,7 @@
     }
   }
 
-  let callbackUrl = chrome.extension.getURL('/views/self-close.html');
+  let callbackUrl = 'https://foodtruckincubator.github.io/WeRat_Chrome/foursquare-callback.html';
   let clientId = 'NCHNPGBJPIRJ44SFBIZYH2CP4G2JYF4OOBMDTYFZQ1L1ZLKD';
   let baseUrl = 'https://pt.foursquare.com/oauth2/authenticate';
 
@@ -28,13 +28,21 @@
   let windowOptions = `width=500, height=500,left=${(window.outerWidth - 500)/2}, top=${(window.outerHeight - 500)/ 2.5}`;
 
   function connectFoursquare() {
-    let listenerForConnectCallback = addListenerFor('connectFoursquareCallback', connectCallback);
+    listenerForConnectCallback = addListenerFor('connectFoursquareCallback', connectCallback);
     window.open(authUrl, '', windowOptions);
   }
 
   function connectCallback(data) {
-    let response = data.response;
+    removeEventListener('message', listenerForConnectCallback, false);
 
-    alert(response);
+    let search = data.response + '&'; // ensure parse
+
+    search = search.substr(search.indexOf('code=') + 5); // front code= to front
+    search = search.substr(0, search.indexOf('&')); // from 0 until first &
+    search = decodeURIComponent(search);
+
+    const code = search;
+
+    alert(code);
   }
 })();

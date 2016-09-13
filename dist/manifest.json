@@ -56,8 +56,6 @@
 		"views/share-popup.html",
 		"facebook-interface.js",
 		"foursquare-interface.js",
-		"facebook-sdk.js",
-		"self-close.js",
-		"views/self-close.html"
+		"facebook-sdk.js"
 	]
 }
