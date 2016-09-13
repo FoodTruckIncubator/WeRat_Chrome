@@ -14,5 +14,6 @@
   l('facebook-jssdk', 'facebook-sdk.js');
 
   l('facebook-socialcalendarextension-script', 'facebook-interface.js');
+  l('foursquare-socialcalendarextension-script', 'foursquare-interface.js');
 
 })(document, 'script');
