@@ -6,7 +6,7 @@
     window.opener.postMessage({
       for: 'connectFoursquareCallback',
       to: 'socialcalendarextension',
-      response: location.search
+      response: location.hash
     }, '*');
   }
   
