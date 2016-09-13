@@ -10,8 +10,7 @@ let shareModal = (query) => $('#socialcalendarextension-share-modal' + (query ||
 let Event = () => ({
   $title: $('#maincell input[type="text"]')[0],
   $location: $('#maincell input[type="text"]')[1],
-  datetime: $('#maincell .ep-edr-first-line input'),
-  isAllDay: () => $('#maincell input[type="checkbox"]:first').is(':checked')
+  $datetime: $('#maincell .ep-edr-first-line input')
 });
 
 Event.imageUrl = (event) => {
@@ -20,8 +19,8 @@ Event.imageUrl = (event) => {
 }
 
 Event.toText = (event) => {
-  let datetime = event.datetime[0].value;
-  if(!event.isAllDay()) datetime += ' ' + event.datetime[1].value;
+  let datetime = event.date;
+  if(!event.isAllDay) datetime += ' ' + event.time;
 
   return `In ${datetime}, ${event.title} at ${event.location}`;
 }
@@ -31,6 +30,11 @@ Event.toLink = (event) => encodeURIComponent(Event.toText(event));
 Event.setValues = (event) => {
   event.title = event.$title.value;
   event.location = event.$location.value;
+
+  event.date = event.$datetime[0].value;
+  event.time = event.$datetime[1].value;
+
+  event.isAllDay = $('#maincell input[type="checkbox"]:first').is(':checked');
 };
 
 // ---- sharee options
@@ -77,6 +81,7 @@ function loadModal() {
   $.get(chrome.extension.getURL('/views/share-popup.html'), (popup) => {
     body().append(popup);
     checkFacebookLoginState();
+    checkFoursquareLoginState();
   });
 }
 
@@ -93,6 +98,9 @@ function handleModalButtons() {
   });
   shareModal('-gplus').off('click').on('click', () => {
     window.open(gplusUrl(Event.imageUrl(event)), '', windowOptions);
+  });
+  shareModal('-foursquare').off('click').on('click', () => {
+    listFoursquarePlaces(Event, event);
   });
 }
 

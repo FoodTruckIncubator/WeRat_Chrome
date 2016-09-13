@@ -47,3 +47,33 @@ body {
 .socialcalendarextension-connect {
   margin-top: 20px;
 }
+
+.socialcalendarextension-foursquare-places ul {
+  padding: 0;
+}
+
+.socialcalendarextension-foursquare-li {
+  list-style: none;
+  padding: 10px 20px;
+  cursor: pointer;
+
+
+  -webkit-transition: 0.1s linear all;
+  -moz-transition: 0.1s linear all;
+  -ms-transition: 0.1s linear all;
+  -o-transition: 0.1s linear all;
+  transition: 0.1s linear all;
+}
+.socialcalendarextension-foursquare-li:hover {
+  background-color: rgb(240, 240, 240);
+}
+
+.socialcalendarextension-foursquare-li .sce-f-li-name {
+  font-weight: bold;
+  font-size: 11pt;
+}
+
+.socialcalendarextension-foursquare-li .sce-f-li-location {
+  display: block;
+  color: #999;
+}
