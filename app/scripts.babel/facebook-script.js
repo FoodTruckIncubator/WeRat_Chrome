@@ -1,11 +1,12 @@
 (function() {
-  function FB(fn, params, callback) {
+  function FB(fn, params, callback, callbackFirst) {
     if(!params) params = [];
     if(!(params instanceof Array)) params = [params];
 
     window.postMessage({
       from: 'socialcalendarextension',
-      fb: { fn, params }
+      fb: { fn, params },
+      callbackFirst: !!callbackFirst
     }, '*');
 
     let listener = listenerFor(fn);
@@ -32,19 +33,20 @@
 
   let postButton = () => $('#socialcalendarextension-share-modal-facebook');
   let connectButton = () => $('#socialcalendarextension-connect-facebook');
+  let loading = () => $('.socialcalendarextension-loading');
 
   function statusChangeCallback(response) {
     console.log(response);
     if(response.status === 'connected') {
-      postButton().removeClass('sce-disabled');
-      connectButton().hide();
     } else {
-      connectButton().show();
     }
   }
 
   function checkFacebookLoginState(callback) {
-    FB('getLoginStatus', null, statusChangeCallback);
+    FB('getLoginStatus', null, tryPostAtFacebook);
+  }
+  function checkFacebookLoginStateOnly(callback) {
+    FB('getLoginStatus', null, () => {});
   }
 
   function confirmPostToFacebook(Event, event) {
@@ -91,7 +93,28 @@
     });
   }
 
+  function tryPostAtFacebook(Event, event) {
+    loading().fadeIn();
+    FB('getLoginStatus', null, function(response) {
+      loading().fadeOut();
+      if(response.status === 'connected') {
+        confirmPostToFacebook(Event || __Event, event || __event);
+      } else {
+        swal({
+          title: 'Connect at Facebook',
+          text: 'Click in <strong>Ok</strong> to connect with Facebook first',
+          type: 'info',
+          showCancelButton: true,
+          html: true
+        }, () => {
+          FB('login', [{ scope: 'public_profile,email,user_posts' }], tryPostAtFacebook.bind(null, Event, event), true);
+        });
+      }
+    });
+  }
+
   window.checkFacebookLoginState = checkFacebookLoginState;
-  window.confirmPostToFacebook = confirmPostToFacebook;
+  window.checkFacebookLoginStateOnly = checkFacebookLoginStateOnly;
+  window.tryPostAtFacebook = tryPostAtFacebook;
   window.FB = FB;
 })();

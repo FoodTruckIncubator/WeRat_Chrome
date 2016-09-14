@@ -80,12 +80,11 @@ function shareThisEvent(event) {
 function loadModal() {
   $.get(chrome.extension.getURL('/views/share-popup.html'), (popup) => {
     body().append(popup);
-    checkFacebookLoginState();
+    checkFacebookLoginStateOnly();
   });
 }
 
 function handleModalButtons() {
-  checkFacebookLoginState();
   let event = shareModal().data('event');
 
   shareModal('-text').text(`"${Event.toText(event)}"`);
@@ -94,7 +93,7 @@ function handleModalButtons() {
     window.open(twitterUrl + Event.toLink(event), '', windowOptions);
   });
   shareModal('-facebook').off('click').on('click', () => {
-    confirmPostToFacebook(Event, event);
+    tryPostAtFacebook(Event, event);
   });
   shareModal('-gplus').off('click').on('click', () => {
     window.open(gplusUrl(Event.imageUrl(event)), '', windowOptions);

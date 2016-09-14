@@ -122,8 +122,7 @@
         text: 'Click in <strong>Ok</strong> to connect with Foursquare first',
         type: 'info',
         showCancelButton: true,
-        html: true,
-        inputValue: Event.toText(event)
+        html: true
       }, connectFoursquare.bind(null, listFoursquarePlaces.bind(null, Event, event)));
     });
   }

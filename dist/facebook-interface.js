@@ -22,7 +22,10 @@
 
     if(event.data.fb.fn === 'getLoginStatus') return FB.getLoginStatus(callback);
 
-    FB[event.data.fb.fn].apply(FB, event.data.fb.params.concat(callback));
+    let params = event.data.fb.params;
+    params = event.data.callbackFirst ? [callback].concat(params) : params.concat(callback);
+
+    FB[event.data.fb.fn].apply(FB, params);
   }
 
   if(window.addEventListener) {
