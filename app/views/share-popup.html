@@ -19,18 +19,16 @@
   <button class="socialcalendarextension-btn" id="socialcalendarextension-share-modal-gplus">
     Google Plus
   </button>
-  <button class="socialcalendarextension-btn sce-disabled" id="socialcalendarextension-share-modal-foursquare">
+  <button class="socialcalendarextension-btn" id="socialcalendarextension-share-modal-foursquare">
     Foursquare
   </button>
 
   <div class="socialcalendarextension-connect">
     <fb:login-button id="socialcalendarextension-connect-facebook" scope="public_profile,email,user_posts" onlogin="checkFacebookLoginState()">
     </fb:login-button>
-
-    <button class="socialcalendarextension-btn" id="socialcalendarextension-connect-foursquare" onclick="connectFoursquare()">
-      Connect Foursquare
-    </button>
   </div>
+
+  <div class="socialcalendarextension-loading" style="display: none;">loading...</div>
 
   <div class="socialcalendarextension-foursquare-places" style="display: none;">
     <h3>Choose the right location</h3>

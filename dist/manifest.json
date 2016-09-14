@@ -56,7 +56,6 @@
 	"web_accessible_resources": [
 		"views/share-popup.html",
 		"facebook-interface.js",
-		"foursquare-interface.js",
 		"facebook-sdk.js"
 	]
 }

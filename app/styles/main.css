@@ -77,3 +77,14 @@ body {
   display: block;
   color: #999;
 }
+
+.socialcalendarextension-loading {
+    text-align: center;
+    padding: 8px !important;
+    border: 1px solid #f4f4f4 !important;
+    background: #f4f4f4;
+    border-radius: 4px;
+    font-size: 10pt;
+    display: block;
+    box-shadow: 0px 2px 11px -4px #ddd;
+}

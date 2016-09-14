@@ -1,15 +1,8 @@
 'use strict';
 
 (function() {
-  let listenerForConnectFoursquare = addListenerFor('connectFoursquare', connectFoursquare);
   let listenerForConnectCallback;
   let accessToken;
-
-  function checkFoursquareLoginState() {
-    chrome.storage.sync.get('foursquareToken', function(result) {
-      if(result.foursquareToken) handleButtons(result.foursquareToken);
-    });
-  }
 
   function addListenerFor(fnFor, callback) {
     let listener = listenerFor(fnFor, callback);
@@ -31,6 +24,7 @@
   let baseUrl = 'https://foursquare.com/';
   let apiBaseUrl = 'https://api.foursquare.com/v2';
   let placesList = () => $('.socialcalendarextension-foursquare-places');
+  let loading = () => $('.socialcalendarextension-loading');
 
   let authUrl = `${baseUrl}/oauth2/authenticate?client_id=${clientId}&response_type=token&redirect_uri=${callbackUrl}`;
   let searchUrl = (token, near) => `${apiBaseUrl}/venues/search?v=20160913&intent=browse&oauth_token=${token}&near=${encodeURIComponent(near)}`;
@@ -38,39 +32,31 @@
 
   let windowOptions = `width=500, height=500,left=${(window.outerWidth - 500)/2}, top=${(window.outerHeight - 500)/ 2.5}`;
 
-  function connectFoursquare() {
-    listenerForConnectCallback = addListenerFor('connectFoursquareCallback', connectCallback);
+  function connectFoursquare(callback) {
+    listenerForConnectCallback = addListenerFor('connectFoursquareCallback', connectCallback(callback));
     window.open(authUrl, '', windowOptions);
   }
 
-  function connectCallback(data) {
-    removeEventListener('message', listenerForConnectCallback, false);
+  function connectCallback(callback) {
+    return function(data) {
+      removeEventListener('message', listenerForConnectCallback, false);
 
-    let search = data.response + '&'; // ensure parse
+      let search = data.response + '&'; // ensure parse
 
-    search = search.substr(search.indexOf('access_token=') + 13); // front access_token= to front
-    search = search.substr(0, search.indexOf('&')); // from 0 until first &
-    search = decodeURIComponent(search);
+      search = search.substr(search.indexOf('access_token=') + 13); // front access_token= to front
+      search = search.substr(0, search.indexOf('&')); // from 0 until first &
+      search = decodeURIComponent(search);
 
-    let token = search;
+      let token = search;
 
-    chrome.storage.sync.set({ foursquareToken: token }, function() {
-      console.log(`Token ${token} saved`);
+      chrome.storage.sync.set({ foursquareToken: token }, function() {
+        console.log(`Token ${token} saved`);
 
-      handleButtons(token);
-    });
+        accessToken = token;
+        callback();
+      });
+    }
   }
-
-  function handleButtons(token) {
-    let postButton = $('#socialcalendarextension-share-modal-foursquare');
-    let connectButton = $('#socialcalendarextension-connect-foursquare');
-
-    postButton.removeClass('sce-disabled');
-    connectButton.hide();
-
-    accessToken = token;
-  }
-
 
   function confirmPostToFoursquare(Event, event, venue, callback) {
     swal({
@@ -78,21 +64,23 @@
       text: `Write what you want to share <small>(in ${venue.name})</small>:`,
       type: 'input',
       showCancelButton: true,
-      closeOnConfirm: false,
       html: true,
       inputValue: Event.toText(event)
     }, callback);
   }
   function postToFoursquare(venue, message) {
-    $.post(checkinUrl(accessToken, venue.id, message), function(response) {
-        swal({
-          title: 'Nice!',
-          text: `You checked in <strong>${message}</strong> at <strong>${venue.name}</strong> `,
-          type: 'success',
-          html: true
-        });
+    loading().fadeIn();
+    placesList().hide();
 
-      placesList().hide();
+    $.post(checkinUrl(accessToken, venue.id, message), function(response) {
+      loading().fadeOut();
+
+      swal({
+        title: 'Nice!',
+        text: `You checked in <strong>${message}</strong> at <strong>${venue.name}</strong> `,
+        type: 'success',
+        html: true
+      });
     });
   }
 
@@ -113,13 +101,32 @@
     }
   }
   function listFoursquarePlaces(Event, event) {
+    loading().fadeIn();
     $.get(searchUrl(accessToken, event.location), (response) => {
+      loading().fadeOut();
       let lis = response.response.venues.map(buildPlaceLi(Event, event));
 
       placesList().show().find('> ul').html('').append(lis);
     });
   }
 
-  window.checkFoursquareLoginState = checkFoursquareLoginState;
-  window.listFoursquarePlaces = listFoursquarePlaces;
+  function tryPostAtFoursquare(Event, event) {
+    chrome.storage.sync.get('foursquareToken', function(result) {
+      if(result.foursquareToken) {
+        accessToken = result.foursquareToken;
+        return listFoursquarePlaces(Event, event);
+      }
+
+      swal({
+        title: 'Connect at Foursquare',
+        text: 'Click in <strong>Ok</strong> to connect with Foursquare first',
+        type: 'info',
+        showCancelButton: true,
+        html: true,
+        inputValue: Event.toText(event)
+      }, connectFoursquare.bind(null, listFoursquarePlaces.bind(null, Event, event)));
+    });
+  }
+
+  window.tryPostAtFoursquare = tryPostAtFoursquare;
 })();

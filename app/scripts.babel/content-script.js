@@ -81,11 +81,11 @@ function loadModal() {
   $.get(chrome.extension.getURL('/views/share-popup.html'), (popup) => {
     body().append(popup);
     checkFacebookLoginState();
-    checkFoursquareLoginState();
   });
 }
 
 function handleModalButtons() {
+  checkFacebookLoginState();
   let event = shareModal().data('event');
 
   shareModal('-text').text(`"${Event.toText(event)}"`);
@@ -100,7 +100,7 @@ function handleModalButtons() {
     window.open(gplusUrl(Event.imageUrl(event)), '', windowOptions);
   });
   shareModal('-foursquare').off('click').on('click', () => {
-    listFoursquarePlaces(Event, event);
+    tryPostAtFoursquare(Event, event);
   });
 }
 
